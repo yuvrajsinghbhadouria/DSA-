@@ -29,6 +29,7 @@ Output:
 10
 10
 30 */
+
 #include <iostream>
 #include <vector>
 using namespace std;
