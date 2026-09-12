@@ -1,47 +1,67 @@
 /*Problem: Implement topological sorting using in-degree array and queue (Kahnâ€™s Algorithm).*/
-#include <bits/stdc++.h>
-using namespace std;
+#include <stdio.h>
+#include <stdlib.h>
 
-class Solution {
-public:
-    vector<int> topoSort(int V, vector<vector<int>>& edges) {
-        vector<vector<int>> adj(V);
-        vector<int> indegree(V, 0);
+#define MAX_VERTICES 1000
 
-        // Build graph and calculate in-degree
-        for (auto &edge : edges) {
-            int u = edge[0];
-            int v = edge[1];
+int main()
+{
+    int V, E;
+    scanf("%d %d", &V, &E);
 
-            adj[u].push_back(v);
-            indegree[v]++;
+    int adj[MAX_VERTICES][MAX_VERTICES];
+    int indegree[MAX_VERTICES] = {0};
+
+    // Initialize adjacency matrix
+    for (int i = 0; i < V; i++)
+    {
+        for (int j = 0; j < V; j++)
+        {
+            adj[i][j] = 0;
         }
+    }
 
-        queue<int> q;
+    // Read edges and update in-degrees
+    for (int i = 0; i < E; i++)
+    {
+        int u, v;
+        scanf("%d %d", &u, &v);
+        adj[u][v] = 1;
+        indegree[v]++;
+    }
 
-        // Add nodes with in-degree 0
-        for (int i = 0; i < V; i++) {
-            if (indegree[i] == 0)
-                q.push(i);
+    // Find nodes with in-degree 0
+    int queue[MAX_VERTICES];
+    int front = 0, rear = 0;
+
+    for (int i = 0; i < V; i++)
+    {
+        if (indegree[i] == 0)
+        {
+            queue[rear++] = i;
         }
+    }
 
-        vector<int> ans;
+    // Kahn's Algorithm
+    while (front < rear)
+    {
+        int node = queue[front++];
+        printf("%d ", node);
 
-        // Kahn's Algorithm
-        while (!q.empty()) {
-            int node = q.front();
-            q.pop();
-
-            ans.push_back(node);
-
-            for (int next : adj[node]) {
-                indegree[next]--;
-
-                if (indegree[next] == 0)
-                    q.push(next);
+        for (int j = 0; j < V; j++)
+        {
+            if (adj[node][j])
+            {
+                indegree[j]--;
+                if (indegree[j] == 0)
+                {
+                    queue[rear++] = j;
+                }
             }
         }
-
-        return ans;
     }
-};
+
+    printf("\n");
+
+    return 0;
+}
